@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: 2.ConfigService
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
+          clone-on-start: true
+          uri: git@github.com:BhushanGhodke/Config_Server_Shopping_Portal.git
+server:
+  port: 2222					
