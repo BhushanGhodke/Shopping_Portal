@@ -74,7 +74,7 @@ public class UserController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<UserBinding> updateUserInfo(@RequestBody UserBinding userBinding) {
+	public ResponseEntity<ApiResponse<UserBinding>> updateUserInfo(@RequestBody UserBinding userBinding) {
 		System.out.println("update " + userBinding);
 		UserBinding userInfo = userService.updateUserInfo(userBinding);
 
@@ -84,6 +84,6 @@ public class UserController {
 		response.setErrorCode(200);
 		response.setMessage("User updated successfully");
 		
-		return new ResponseEntity<>(userInfo, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

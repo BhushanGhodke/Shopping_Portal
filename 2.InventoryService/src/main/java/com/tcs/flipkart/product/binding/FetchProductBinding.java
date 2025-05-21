@@ -13,6 +13,8 @@ private Integer id;
 	private Integer price;
 	
 	private String imageUrls;
+	
+	private String categoryName;
 
 
 	
@@ -62,6 +64,14 @@ private Integer id;
 
 	public void setImageUrls(String imageUrls) {
 		this.imageUrls = imageUrls;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 

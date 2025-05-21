@@ -29,6 +29,8 @@ public class User {
 	
 	private String mobile;
 	
+	private String address;
+	
 	@CreationTimestamp
 	private LocalDate createdDate;
 	
@@ -69,6 +71,15 @@ public class User {
 	}
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+	
+	
+	
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public LocalDate getCreatedDate() {
 		return createdDate;

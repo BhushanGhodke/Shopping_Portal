@@ -9,6 +9,7 @@ import javax.imageio.ImageReader;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +17,11 @@ import com.cloudinary.Cloudinary;
 import com.tcs.flipkart.product.binding.FetchProductBinding;
 import com.tcs.flipkart.product.binding.ProductBinding;
 import com.tcs.flipkart.product.dto.OrderDetails;
+import com.tcs.flipkart.product.entity.Category;
 import com.tcs.flipkart.product.entity.ImageModel;
 import com.tcs.flipkart.product.entity.Product;
 import com.tcs.flipkart.product.exception.ProductNotFoundException;
+import com.tcs.flipkart.product.repository.CategoryRepository;
 import com.tcs.flipkart.product.repository.ImageModelRepository;
 import com.tcs.flipkart.product.repository.ProductRepository;
 
@@ -33,6 +36,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ImageModelRepository imageModelRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Override
 	public Product saveProduct(ProductBinding productBinding) {
@@ -59,10 +65,12 @@ public class ProductServiceImpl implements ProductService {
 			FetchProductBinding binding = new FetchProductBinding();
 
 			ImageModel imageModel = imageModelRepository.findById(x.getImageModelId()).get();
+			
 			String imageUrl = imageModel.getImageUrl();
 
 			binding.setImageUrls(imageUrl);
-
+            binding.setCategoryName(imageUrl);
+            binding.setCategoryName(x.getCategoryName());
 			BeanUtils.copyProperties(x, binding);
 
 			productFetch.add(binding);
@@ -96,13 +104,16 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<FetchProductBinding> getProductByCategory(Integer categoryId) {
+	public List<FetchProductBinding> getProductByCategory(String categoryName) {
 
 		List<Product> productList = productRepository.findAll();
-
+		
+		List<Category> allCategory = categoryRepository.findAll();
+	
 		List<Product> collect = productList.stream()
 
-				.filter(product -> product.getCategoryId() == categoryId).collect(Collectors.toList());
+				.filter(
+						product -> product.getCategoryName().equals(categoryName)).collect(Collectors.toList());
 
 		if (collect.isEmpty()) {
 			throw new ProductNotFoundException("No Product Found");
@@ -116,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 
 			ImageModel imageModel = imageModelRepository.findById(x.getImageModelId()).get();
 			String imageUrl = imageModel.getImageUrl();
-
+          
 
 			binding.setImageUrls(imageUrl);
 

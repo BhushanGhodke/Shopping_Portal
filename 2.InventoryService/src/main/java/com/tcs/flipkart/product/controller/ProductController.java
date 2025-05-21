@@ -91,10 +91,10 @@ public class ProductController {
 		return new ResponseEntity<List<FetchProductBinding>>(productList, HttpStatus.OK);
 	}
 
-	@GetMapping("/select/{category}")
-	public ResponseEntity<List<FetchProductBinding>> getSelectedProduct(@PathVariable Integer categoryId) {
+	@GetMapping("/select/{categoryName}")
+	public ResponseEntity<List<FetchProductBinding>> getSelectedProduct(@PathVariable String  categoryName) {
 
-		List<FetchProductBinding> productByCategory = productService.getProductByCategory(categoryId);
+		List<FetchProductBinding> productByCategory = productService.getProductByCategory(categoryName);
 
 		return new ResponseEntity<List<FetchProductBinding>>(productByCategory, HttpStatus.OK);
 	}

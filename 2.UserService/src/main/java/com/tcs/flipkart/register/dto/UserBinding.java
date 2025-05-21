@@ -9,6 +9,8 @@ private Integer id;
 	private String email;
 	
 	private String mobile;
+	
+	private String address;
 
 	public Integer getId() {
 		return id;
@@ -42,10 +44,21 @@ private Integer id;
 		this.mobile = mobile;
 	}
 
+	
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	@Override
 	public String toString() {
-		return "UserBinding [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + "]";
+		return "UserBinding [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", address="
+				+ address + "]";
 	}
-	
+
 	
 }

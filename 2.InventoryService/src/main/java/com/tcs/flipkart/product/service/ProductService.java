@@ -18,7 +18,7 @@ public interface ProductService {
 	
 	public ImageModel uploadImage(MultipartFile file);
 	
-	public List<FetchProductBinding> getProductByCategory(Integer categoryId);
+	public List<FetchProductBinding> getProductByCategory(String categoryName);
 	
 	public String getImageUrlById(Integer productId);
 	
