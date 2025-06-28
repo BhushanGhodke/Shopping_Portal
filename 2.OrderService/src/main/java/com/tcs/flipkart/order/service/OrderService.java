@@ -12,4 +12,6 @@ public interface OrderService {
 	public boolean cancelOrder(Integer orderId);
 	
 	public List<OrderResponse> getOrderListByUser(Integer userId);
+	
+	public void updateOrderStatus();
 }

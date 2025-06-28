@@ -1,10 +1,15 @@
 package com.tcs.flipkart.order.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +26,9 @@ import jakarta.transaction.Transactional;
 @Service
 public class OrderServiceImpl implements OrderService{
 
+	private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+	
+	
 	@Autowired
 	private OrderRepository orderRepository;
 	
@@ -33,10 +41,13 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	@Transactional
 	public List<OrderDTO> createOrder(List<OrderDTO> orderDTO) {
-
+        
+		logger.info("createOrder() execution started  ");
+		
 		 List<Order> orderEntities = orderDTO.stream()
                  .map(OrderMapper::convertToEntity)
                  .collect(Collectors.toList());
+		 
 		List<Order> orders=orderRepository.saveAll(orderEntities);
 		
 		if(!orders.isEmpty()) {
@@ -47,28 +58,40 @@ public class OrderServiceImpl implements OrderService{
 		              
 			});
 		}
-		
+		logger.info("createOrder() execution end successfully");
 		 return orders.stream().map(OrderMapper::convertToDto).collect(Collectors.toList());
 	    
 	  
 	}
+	
+	
+	
 
 	@Override
 	public boolean cancelOrder(Integer orderId) {
-	
+
+		logger.info("cancelOrder() execution started");
+		
 		Optional<Order> order = orderRepository.findById(orderId);
 		
 		if(order.isPresent()) {
 			orderRepository.delete(order.get());
+
+			logger.info("cancelOrder() execution stopped");
 		    return true;
 		}else {
+
+			logger.info("cancelOrder() executed but not cancel order");
 			return false;
 		}
 	}
 	
 	@Override
 	public List<OrderResponse> getOrderListByUser(Integer userId) {
-	
+
+
+		logger.info("getOrderListByUser() execution started :: "+userId);
+		
 		List<Order> orderList = orderRepository.getOrderListByUserId(userId);
 		
 		List<OrderResponse> response= new ArrayList<OrderResponse>();
@@ -90,7 +113,39 @@ public class OrderServiceImpl implements OrderService{
 			response.add(orderResponse);
 			imageUrl="";
 		});
+
+		logger.info("getOrderListByUser() execution stopped ");
 		return response;
+	}
+	
+	@Override
+	public void updateOrderStatus() {
+	
+		List<Order> orderList = orderRepository.findAll();
+		
+		orderList.forEach(x->{
+			
+			if(x.getOrderStatus().equalsIgnoreCase("PLACED")) {
+				
+			    LocalDateTime orderDate = x.getOrderDate();
+			    
+				Period period = Period.between(orderDate.toLocalDate(), LocalDate.now()) ;
+				
+				int months = period.getMonths();
+				
+				int days = period.getDays();
+				
+				System.out.println(months);
+				System.out.println(days);
+				if((months*30+days)>=7) {
+					x.setOrderStatus("DELIVERD");
+					orderRepository.save(x);	
+				}
+				
+			 	
+			}
+		});
+		
 	}
 	
 }
